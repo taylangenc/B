@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0" />
+<title>&&&&&</title>
+<style>
+  :root {
+    --transition: 0.4s ease;
+    --main-font: "Segoe UI", system-ui, -apple-system, sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family: var(--main-font);
+    background: #f2e9f7;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:1rem;
+    overflow:hidden;
+    position:relative;
+    color:#222;
+  }
+  .container{
+    max-width:500px;
+    width:100%;
+    text-align:center;
+    position:relative;
+    z-index:1;
+  }
+  .envelope-wrapper{
+    position:relative;
+    width:100%;
+    max-width:360px;
+    margin:0 auto 1.5rem;
+    cursor:pointer;
+    user-select:none;
+  }
+  .pulse {
+    animation: pulse 1.6s infinite;
+    display:inline-block;
+  }
+  @keyframes pulse{
+    0%{transform:scale(1);}
+    50%{transform:scale(1.07);}
+    100%{transform:scale(1);}
+  }
+  .envelope{
+    width:100%;
+    background:#fff;
+    border:2px solid #d1c7e0;
+    border-radius:8px;
+    position:relative;
+    padding:1rem 1rem 3rem;
+    overflow:hidden;
+    box-shadow:0 15px 40px -5px rgba(0,0,0,0.15);
+  }
+  .flap{
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    height:70px;
+    background:#d1c7e0;
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+    transform-origin:top;
+    transition: transform var(--transition);
+    z-index:2;
+  }
+  .envelope.open .flap{
+    transform:translateY(-60px) rotateX(180deg);
+  }
+  .letter{
+    background:#fff;
+    padding:1rem 1rem 1.5rem;
+    border-radius:6px;
+    box-shadow:0 10px 30px -5px rgba(0,0,0,0.1);
+    margin-top:20px;
+    opacity:0;
+    transform:translateY(20px);
+    transition: opacity var(--transition), transform var(--transition);
+    position:relative;
+    z-index:1;
+    max-height:0;
+    overflow:hidden;
+  }
+  .envelope.open .letter{
+    opacity:1;
+    transform:translateY(0);
+    max-height:1000px;
+  }
+  .letter-content{
+    text-align:left;
+    line-height:1.45;
+    white-space:pre-wrap;
+    font-size:1rem;
+    max-height:300px;
+    overflow:auto;
+  }
+  .buttons{
+    margin-top:1.5rem;
+    display:flex;
+    gap:1rem;
+    justify-content:center;
+    flex-wrap:wrap;
+  }
+  .btn{
+    padding:0.85rem 1.6rem;
+    border:none;
+    border-radius:999px;
+    cursor:pointer;
+    font-size:1rem;
+    font-weight:600;
+    position:relative;
+    min-width:120px;
+    user-select:none;
+    transition: transform .2s ease;
+  }
+  .btn-evet{
+    background: linear-gradient(135deg,#ff6b9e,#ff9ecb);
+    color:#fff;
+    box-shadow:0 12px 30px -5px rgba(255,107,158,0.6);
+  }
+  .btn-hayir{
+    background:#ddd;
+    color:#555;
+    pointer-events:auto;
+  }
+  .shake {
+    animation: shake .5s;
+  }
+  @keyframes shake{
+    0%{transform:translateX(0);}
+    20%{transform:translateX(-8px);}
+    40%{transform:translateX(8px);}
+    60%{transform:translateX(-6px);}
+    80%{transform:translateX(6px);}
+    100%{transform:translateX(0);}
+  }
+  .overlay{
+    position:fixed;
+    inset:0;
+    background:#000;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    color:#fff;
+    padding:1rem;
+    z-index:5;
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .6s ease;
+  }
+  .overlay.active{
+    opacity:1;
+    pointer-events:auto;
+  }
+  #bgVideo{
+    position:absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: rotate(-90deg);
+    opacity: 0.15;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .message{
+    margin-top:1rem;
+    font-size:1.1rem;
+  }
+  .small{
+    font-size:.75rem;
+    margin-top:8px;
+    opacity:.8;
+  }
+  @media (max-width:600px){
+    .letter-content{font-size:.95rem;}
+    .btn{min-width:100px;font-size:.9rem;}
+  }
+</style>
+</head>
+<body>
+
+<div class="container" id="mainContent">
+  <div class="envelope-wrapper" id="envelopeWrapper">
+    <div class="envelope" id="envelope">
+      <div class="flap" id="flap"></div>
+      <div style="text-align:center; margin-bottom:12px;">
+        <div class="pulse" id="tıklaArea">
+          <div style="font-size:1.1rem; font-weight:600;">Özür Dilerim 💌</div>
+        </div>
+      </div>
+      <div class="letter" id="letter">
+        <div class="letter-content" id="letterContent">
+          Sevgilim, istemeden de olsa seni kırdığım için özür dilerim. Sen hesap sormayacaksın da kim soracak :D? Bundan sonra attığım adımda bile sana 'hesap' vereceğim. Seni çok seviyorum. Lütfen artık barışalım ki ben de şu projeme odaklanabileyim:D(Aklım sendeyken çalışamıyorum da:)).
+        </div>
+        <div class="small">Bu siteyi 400 satır kod ile yazdım. Senden 4000 kere özür dilerim güzelim. Artık iyi miyiz?</div>
+        <div class="buttons">
+          <button class="btn btn-evet" id="evetBtn">Evet ❤️</button>
+          <button class="btn btn-hayir" id="hayirBtn">Hayır 😢</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="small">Bu sayfa güzelim bitanem sevgilimden özür dilemek için yazıldı. Yazılımcı sevgilisi tarafından.<br>Developed by Taylan GENÇ</div>
+</div>
+
+<div class="overlay" id="overlay">
+  <canvas id="heartCanvas" style="position:absolute; inset:0;display:block;"></canvas>
+  <div class="message">
+    <h1>Eyw</h1>
+    <p>Çok uğraştım evet dediğin için sağol güzelim 💖</p>
+  </div>
+  <video id="bgVideo" autoplay loop muted playsinline></video>
+</div>
+
+
+<script>
+  // Seçimler
+  const envelope = document.getElementById("envelope");
+  const envelopeWrapper = document.getElementById("envelopeWrapper");
+  const letter = document.getElementById("letter");
+  const evetBtn = document.getElementById("evetBtn");
+  const hayirBtn = document.getElementById("hayirBtn");
+  const overlay = document.getElementById("overlay");
+  const canvas = document.getElementById("heartCanvas");
+  const ctx = canvas.getContext("2d");
+  let opened = false;
+
+  // Responsive canvas
+  function resizeCanvas(){
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+  window.addEventListener("resize", resizeCanvas);
+  resizeCanvas();
+
+  // Zarf tıklama
+  envelopeWrapper.addEventListener("click", () => {
+    if (!opened) {
+      envelope.classList.add("open");
+      opened = true;
+      // flap animasyon vs
+    }
+  });
+
+  // Hayır butonu
+  hayirBtn.addEventListener("click", (e)=>{
+    e.preventDefault();
+    hayirBtn.classList.add("shake");
+    setTimeout(()=> hayirBtn.classList.remove("shake"),500);
+    // kısa mesaj balonu
+    const tip = document.createElement("div");
+    tip.textContent = "Lütfen Evet'e bas ❤️";
+    tip.style.position="absolute";
+    tip.style.top="-35px";
+    tip.style.left="50%";
+    tip.style.transform="translateX(-50%)";
+    tip.style.background="rgba(255,255,255,0.95)";
+    tip.style.padding="6px 12px";
+    tip.style.borderRadius="20px";
+    tip.style.fontSize="12px";
+    tip.style.boxShadow="0 10px 25px -5px rgba(0,0,0,0.2)";
+    tip.style.zIndex=10;
+    hayirBtn.appendChild(tip);
+    setTimeout(()=> {
+      tip.style.opacity="0";
+      setTimeout(()=> hayirBtn.removeChild(tip),400);
+    },1300);
+  });
+
+  // Evet butonu
+  evetBtn.addEventListener("click", ()=>{
+    // arkaplanı siyaha çevir ve overlay aktif et
+    document.body.style.background="#000";
+    overlay.classList.add("active");
+    document.getElementById("bgVideo").src = "B.mp4";
+    startHearts();
+  });
+
+  // Kalp objesi
+  class Heart {
+    constructor(){
+      this.reset();
+    }
+    reset(){
+      this.x = Math.random() * canvas.width;
+      this.y = canvas.height + Math.random()*100;
+      this.size = 10 + Math.random()*20;
+      this.speed = 0.5 + Math.random()*1.2;
+      this.alpha = 0;
+      this.phase = Math.random()*Math.PI*2;
+      this.life = 0;
+      this.maxLife = 200 + Math.random()*100;
+      this.color = this.randomColor();
+    }
+    randomColor(){
+      // pembe/ kırmızı tonları
+      const r = Math.floor(200 + Math.random()*55);
+      const g = Math.floor(50 + Math.random()*100);
+      const b = Math.floor(100 + Math.random()*155);
+      return `rgba(${r},${g},${b},`;
+    }
+    update(){
+      this.life++;
+      this.y -= this.speed;
+      this.alpha = Math.sin((this.life/this.maxLife) * Math.PI) * 0.9;
+      this.x += Math.sin(this.phase + this.life*0.02) * 0.5;
+      if (this.life > this.maxLife){
+        this.reset();
+        this.y = canvas.height + Math.random()*60;
+      }
+    }
+    draw(ctx){
+      ctx.save();
+      ctx.globalAlpha = this.alpha;
+      ctx.translate(this.x, this.y);
+      const scale = this.size / 30;
+      ctx.scale(scale, scale);
+      // kalp şekli
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.bezierCurveTo(0, -3, -3, -15, -15, -15);
+      ctx.bezierCurveTo(-35, -15, -35, 10, -35, 10);
+      ctx.bezierCurveTo(-35, 30, -15, 50, 0, 65);
+      ctx.bezierCurveTo(15, 50, 35, 30, 35, 10);
+      ctx.bezierCurveTo(35, 10, 35, -15, 15, -15);
+      ctx.bezierCurveTo(3, -15, 0, -3, 0, 0);
+      ctx.closePath();
+      ctx.fillStyle = this.color + "1)";
+      ctx.fill();
+      ctx.restore();
+    }
+  }
+
+  let hearts = [];
+  const MAX_HEARTS = 80;
+  let animating = false;
+
+  function startHearts(){
+    if (animating) return;
+    animating = true;
+    hearts = [];
+    for(let i=0;i<MAX_HEARTS;i++) hearts.push(new Heart());
+    requestAnimationFrame(loop);
+  }
+
+  function loop(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    hearts.forEach(h=>{
+      h.update();
+      h.draw(ctx);
+    });
+    if (animating) requestAnimationFrame(loop);
+  }
+
+  // Opsiyonel: kullanıcı mektubu düzenlesin istersen (isteğe bağlı)
+  // Örnek: çift tıklayınca düzenlenebilir yap
+  document.getElementById("letterContent").addEventListener("dblclick", ()=>{
+    const lc = document.getElementById("letterContent");
+    lc.contentEditable = "true";
+    lc.focus();
+    lc.style.outline = "2px dashed #c38eff";
+  });
+
+</script>
+</body>
+</html>
