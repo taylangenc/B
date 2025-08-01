@@ -357,15 +357,7 @@
     });
     if (animating) requestAnimationFrame(loop);
   }
-
-  // Opsiyonel: kullanıcı mektubu düzenlesin istersen (isteğe bağlı)
-  // Örnek: çift tıklayınca düzenlenebilir yap
-  document.getElementById("letterContent").addEventListener("dblclick", ()=>{
-    const lc = document.getElementById("letterContent");
-    lc.contentEditable = "false";
-    lc.focus();
-    lc.style.outline = "2px dashed #c38eff";
-  });
+  
 
 </script>
 </body>
